@@ -6,8 +6,6 @@ import pages.GamePage;
 import pages.SteamMainPage;
 import pages.TopSellersPage;
 
-import java.util.Map;
-
 public class GetTopSellersTest extends BaseTest {
     private static final String COUNTRY = "Global";
     private static final int NUMBER_OF_GAME = 1;
@@ -22,15 +20,14 @@ public class GetTopSellersTest extends BaseTest {
         topSellersPage.clickCountryDropDown();
         topSellersPage.changeCountry(COUNTRY);
 
-        Map<String, Double> titlesAndPrices = topSellersPage.getTitlesAndPrices();
-        var firstEntry = titlesAndPrices.entrySet().iterator().next();
-        String firstTitle = firstEntry.getKey();
-        Double firstPrice = firstEntry.getValue();
+        String gameTitle = topSellersPage.getTitleAndPriceOfGame(NUMBER_OF_GAME).getKey();
+        Double gamePrice = topSellersPage.getTitleAndPriceOfGame(NUMBER_OF_GAME).getValue();
 
         GamePage gamePage = topSellersPage.clickGame(NUMBER_OF_GAME);
+
         Assert.assertTrue(gamePage.isLoaded(), "Game page isn't open");
-        Assert.assertEquals(firstTitle, gamePage.getGameName(), "Titles isn't equal");
-        Assert.assertEquals(firstPrice, gamePage.getGamePrice(), "Price isn't equal");
+        Assert.assertEquals(gamePage.getGameName(), gameTitle, "Titles isn't equal");
+        Assert.assertEquals(gamePage.getGamePrice(), gamePrice, "Price isn't equal");
         System.out.println(gamePage.getReleaseDate());
         System.out.println(gamePage.getDeveloperName());
         System.out.println(gamePage.getGameGenre());

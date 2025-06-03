@@ -26,7 +26,7 @@ public class DemoQaFormTest extends BaseTest {
     private static String CITY;
 
     @Test
-    public void sendForm() throws InterruptedException {
+    public void sendForm() {
         DemoQaFormPage demoQaFormPage = new DemoQaFormPage(driver);
         demoQaFormPage.fillFirstName(FIRST_NAME);
         demoQaFormPage.fillLastName(LAST_NAME);
@@ -58,6 +58,5 @@ public class DemoQaFormTest extends BaseTest {
         Assert.assertEquals(demoQaFormPage.getAddress(), ADDRESS, "Address isn't correct");
         Assert.assertEquals(demoQaFormPage.getPicturePath(), FILE_NAME, "Picture name isn't correct");
         Assert.assertEquals(demoQaFormPage.getSubjects(), SUBJECTS, "Subjects aren't correct");
-        Thread.sleep(3000);
     }
 }

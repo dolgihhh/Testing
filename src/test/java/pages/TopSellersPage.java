@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public class TopSellersPage extends BasePage {
-
-    //@FindBy(xpath = "//div[contains(@class, 'DialogInputContainer')]//div[text()='Global']")
-    //private WebElement globalButton;
-
     @FindBy(xpath = "//button[contains(@class, 'DialogDropDown')]")
     private WebElement countryDropDown;
 
@@ -38,6 +34,7 @@ public class TopSellersPage extends BasePage {
     }
 
     public GamePage clickGame(int number) {
+        wait.until(ExpectedConditions.visibilityOfAllElements(gamesElements));
         if (number < 1 || number > gamesElements.size()) {
             throw new IllegalArgumentException("Invalid game number: " + number);
         }
@@ -66,9 +63,21 @@ public class TopSellersPage extends BasePage {
         }
 
         return titleAndPriceMap;
-
     }
 
+    public Map.Entry<String, Double> getTitleAndPriceOfGame(int gameNumber) {
+        Map<String, Double> titlesAndPrices = getTitlesAndPrices();
+
+        if (gameNumber < 1 || gameNumber >= titlesAndPrices.size()) {
+            throw new IndexOutOfBoundsException("Invalid game number: " + gameNumber);
+        }
+
+        return titlesAndPrices.entrySet()
+                .stream()
+                .skip(gameNumber - 1)
+                .findFirst()
+                .orElseThrow();
+    }
     @Override
     public boolean isLoaded() {
         return isElementDisplayed(countryDropDown);
