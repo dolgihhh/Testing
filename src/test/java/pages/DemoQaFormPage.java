@@ -1,0 +1,325 @@
+package pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import utils.DateUtils;
+import utils.NumbersUtils;
+
+import java.io.File;
+import java.util.*;
+
+public class DemoQaFormPage extends BasePage {
+    private static final String URL = "https://demoqa.com/automation-practice-form";
+
+    @FindBy(id = "firstName")
+    private WebElement firstNameInput;
+
+    @FindBy(id = "lastName")
+    private WebElement lastNameInput;
+
+    @FindBy(id = "userEmail")
+    private WebElement userEmailInput;
+
+    @FindBy(xpath = "//*[@name='gender']")
+    private List<WebElement> gendersCheckboxes;
+
+    @FindBy(xpath = "//*[contains(@for, 'gender-radio')]")
+    private List<WebElement> genderLabels;
+
+    @FindBy(id = "userNumber")
+    private WebElement userNumberInput;
+
+    @FindBy(id = "dateOfBirthInput")
+    private WebElement dateOfBirthInput;
+
+    @FindBy(className = "react-datepicker__month-select")
+    private WebElement monthSelect;
+
+    @FindBy(className = "react-datepicker__year-select")
+    private WebElement yearSelect;
+
+    @FindBy(id = "subjectsInput")
+    private WebElement subjectsInput;
+
+    @FindBy(xpath = "//*[@type='checkbox']")
+    private List<WebElement> hobbiesComboboxes;
+
+    @FindBy(xpath = "//*[contains(@for, 'hobbies-checkbox')]")
+    private List<WebElement> hobbiesLabels;
+
+    @FindBy(id = "uploadPicture")
+    private WebElement uploadPicture;
+
+    @FindBy(id = "currentAddress")
+    private WebElement currentAddressInput;
+
+    @FindBy(xpath = "//*[@id='state']/..")
+    private WebElement stateDiv;
+
+    @FindBy(id = "react-select-3-input")
+    private WebElement stateInput;
+
+    @FindBy(xpath = "//div[contains(@id, 'react-select-3-option')]")
+    private List<WebElement> stateInputOptions;
+
+    @FindBy(xpath = "//*[@id='city']/..")
+    private WebElement cityDiv;
+
+    @FindBy(xpath = "//div[contains(@id, 'react-select-4-option')]")
+    private List<WebElement> cityInputOptions;
+
+    @FindBy(id = "submit")
+    private WebElement submitBtn;
+
+    @FindBy(xpath = "//td[text()='Student Name']/following-sibling::td[1]")
+    private WebElement studentName;
+
+    @FindBy(xpath = "//td[text()='Student Email']/following-sibling::td[1]")
+    private WebElement studentEmail;
+
+    @FindBy(xpath = "//td[text()='Gender']/following-sibling::td[1]")
+    private WebElement gender;
+
+    @FindBy(xpath = "//td[text()='Mobile']/following-sibling::td[1]")
+    private WebElement mobile;
+
+    @FindBy(xpath = "//td[text()='Date of Birth']/following-sibling::td[1]")
+    private WebElement dateOfBirth;
+
+    @FindBy(xpath = "//td[text()='Hobbies']/following-sibling::td[1]")
+    private WebElement hobbies;
+
+    @FindBy(xpath = "//td[text()='State and City']/following-sibling::td[1]")
+    private WebElement stateAndCity;
+
+    @FindBy(xpath = "//td[text()='Address']/following-sibling::td[1]")
+    private WebElement address;
+
+    @FindBy(xpath = "//td[text()='Picture']/following-sibling::td[1]")
+    private WebElement picture;
+
+    @FindBy(xpath = "//td[text()='Subjects']/following-sibling::td[1]")
+    private WebElement subjects;
+
+    public DemoQaFormPage(WebDriver driver) {
+        super(driver);
+        driver.get(URL);
+    }
+
+    public void fillFirstName(String firstName) {
+        sendKeys(firstNameInput, firstName);
+    }
+
+    public void fillLastName(String lastName) {
+        sendKeys(lastNameInput, lastName);
+    }
+
+    public void fillUserEmail(String userEmail) {
+        sendKeys(userEmailInput, userEmail);
+    }
+
+    public void chooseGenderByValue(String value) {
+        for (WebElement genderCheckbox: gendersCheckboxes) {
+            if (Objects.equals(genderCheckbox.getAttribute("value"), value)) {
+                String id = genderCheckbox.getAttribute("id");
+                WebElement labelConnectedToCheckbox =
+                        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format("//*[@for='%s']",
+                                id))));
+                labelConnectedToCheckbox.click();
+            }
+        }
+    }
+
+    public void fillUserPhoneNumber(String number) {
+        sendKeys(userNumberInput, number);
+    }
+
+    public void fillUserBirthDate(String dateOfBirth) {
+        click(dateOfBirthInput);
+        Select selectMonth = new Select(monthSelect);
+        String month = DateUtils.getMonth(dateOfBirth);
+        selectMonth.selectByContainsVisibleText(month);
+        Select selectYear = new Select(yearSelect);
+        String year = DateUtils.getYear(dateOfBirth);
+        selectYear.selectByValue(year);
+        String date = DateUtils.reformatDate(dateOfBirth);
+        WebElement dateEl = wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath(String.format("//*[contains(@aria-label,'%s')]", date))));
+        dateEl.click();
+    }
+
+    public void fillSubjects(String subject) {
+        sendKeys(subjectsInput, subject);
+        WebElement subjectBtn = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath(String.format("//div[contains(@class, 'subjects-auto-complete__option') and text()='%s']",
+                        subject))));
+        subjectBtn.click();
+    }
+
+    public void fillHobbiesByValues(List<String> comboboxValues) {
+        for (WebElement hobbyCombobox: hobbiesComboboxes) {
+            if (comboboxValues.contains(hobbyCombobox.getAttribute("value"))) {
+                String id = hobbyCombobox.getAttribute("id");
+                WebElement labelConnectedToCheckbox =
+                        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format("//*[@for='%s']",
+                                id))));
+                labelConnectedToCheckbox.click();
+            }
+        }
+    }
+
+    public void uploadPicture(String filePath) {
+        File fileToUpload = new File(filePath);
+        uploadPicture.sendKeys(fileToUpload.getAbsolutePath());
+    }
+
+    public void fillAddress(String address) {
+        sendKeys(currentAddressInput, address);
+    }
+
+    public void fillState(String state) {
+        scrollTo(stateDiv);
+        click(stateDiv);
+        click(stateDiv);
+        List<String> statesStr = stateInputOptions.stream()
+                .map(WebElement::getText)
+                .toList();
+        if(!statesStr.contains(state)) {
+            throw new NoSuchElementException("State " + state + " is not an option");
+        }
+        WebElement stateToChooseDiv = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath(String.format("//*[text()='%s']", state))));
+        stateToChooseDiv.click();
+    }
+
+    public void fillCity(String city) {
+        scrollTo(cityDiv);
+        click(cityDiv); //to close list
+        click(cityDiv);
+        wait.until(ExpectedConditions.visibilityOfAllElements(cityInputOptions));
+        List<String> citiesStr = cityInputOptions.stream()
+                .map(WebElement::getText)
+                .toList();
+        if(!citiesStr.contains(city)) {
+            throw new NoSuchElementException("City " + city + "is not an option");
+        }
+
+        WebElement cityToChooseDiv = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath(String.format("//*[text()='%s']", city))));
+        cityToChooseDiv.click();
+    }
+
+    public void clickSubmitBtn() {
+        click(submitBtn);
+    }
+
+    public String getRandomState() {
+        scrollTo(stateDiv);
+        click(stateDiv);
+
+        int statesAmount =  stateInputOptions.size();
+        int randomStateIndex = NumbersUtils.getRandomNumber(0, statesAmount - 1);
+
+        return stateInputOptions.get(randomStateIndex).getText();
+    }
+
+    public String getRandomCity() {
+        scrollTo(cityDiv);
+        cityDiv.click();
+        wait.until(ExpectedConditions.visibilityOfAllElements(cityInputOptions));
+
+        int citiesAmount =  cityInputOptions.size();
+        int randomCityIndex = NumbersUtils.getRandomNumber(0, citiesAmount - 1);
+
+        return cityInputOptions.get(randomCityIndex).getText();
+    }
+
+    public String getRandomGender() {
+        wait.until(ExpectedConditions.visibilityOfAllElements(genderLabels));
+        int numberOfGenders = gendersCheckboxes.size();
+        int randomGenderIndex = NumbersUtils.getRandomNumber(0, numberOfGenders - 1);
+
+        return gendersCheckboxes.get(randomGenderIndex).getAttribute("value");
+    }
+
+    public List<String> getRandomHobbies() {
+        wait.until(ExpectedConditions.visibilityOfAllElements(hobbiesLabels));
+        int numberOfHobbies = NumbersUtils.getRandomNumber(1, hobbiesComboboxes.size());
+        List<WebElement> copyHobbies = new ArrayList<>(hobbiesComboboxes);
+        List<String> hobbies = new ArrayList<>();
+        for (int i = 0; i < numberOfHobbies; i++) {
+            int index = NumbersUtils.getRandomNumber(0, copyHobbies.size() - 1);
+            hobbies.add(copyHobbies.get(index).getAttribute("value"));
+            copyHobbies.remove(index);
+        }
+
+        return hobbies;
+    }
+
+    public String getStudentName() {
+        return studentName.getText();
+    }
+
+    public String getStudentEmail() {
+        return studentEmail.getText();
+    }
+
+    public String getGender() {
+        return gender.getText();
+    }
+
+    public String getMobile() {
+        return mobile.getText();
+    }
+
+    public String getDateOfBirth() {
+        return DateUtils.formatDate(dateOfBirth.getText());
+    }
+
+    public String getStateAndCity() {
+        return stateAndCity.getText();
+    }
+
+    public String getAddress() {
+        return address.getText();
+    }
+
+    public String getPicturePath() {
+        return picture.getText();
+    }
+
+    public String getSubjects() {
+        return subjects.getText();
+    }
+
+    public List<String> getHobbies() {
+        return Arrays.stream(hobbies.getText().split(","))
+                .map(String::trim)
+                .toList();
+    }
+
+    public List<String> getHobbiesFromValues(List<String> comboboxValues) {
+        List<String> hobbiesNames = new ArrayList<>();
+        for (WebElement hobbyCombobox: hobbiesComboboxes) {
+            if (comboboxValues.contains(hobbyCombobox.getAttribute("value"))) {
+                String id = hobbyCombobox.getAttribute("id");
+                WebElement labelConnectedToCheckbox =
+                        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format("//*[@for='%s']",
+                                id))));
+                hobbiesNames.add(labelConnectedToCheckbox.getText());
+            }
+        }
+
+        return hobbiesNames;
+    }
+
+
+    @Override
+    public boolean isLoaded() {
+        return isElementDisplayed(firstNameInput);
+    }
+}
