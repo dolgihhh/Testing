@@ -4,14 +4,15 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.SwagLabsMainPage;
 import pages.SwagLabsProductsPage;
+import utils.ConfigReader;
 
 public class SwagLabsSortTest extends BaseTest {
-    private static final String USERNAME = "standard_user";
-    private static final String PASSWORD = "secret_sauce";
-    private static final String SORT_VALUE = "lohi";
+    private static final String USERNAME = ConfigReader.get("username");//хранить в .properties
+    private static final String PASSWORD = ConfigReader.get("password");
+    private static final String SORT_VALUE = ConfigReader.get("sort_value");
 
     @Test
-    public void sortTest() throws InterruptedException {
+    public void sortTest() {
         SwagLabsMainPage swagLabsMainPage = new SwagLabsMainPage(driver);
         swagLabsMainPage.fillUsername(USERNAME);
         swagLabsMainPage.fillPassword(PASSWORD);

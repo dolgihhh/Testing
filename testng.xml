@@ -1,0 +1,22 @@
+<suite name="Suite" parallel="tests" thread-count="4">
+    <test name="Steam_GetTopSellers">
+        <classes>
+            <class name="tests.GetTopSellersTest"/>
+        </classes>
+    </test>
+    <test name="Steam_PlayerCountComparison">
+        <classes>
+            <class name="tests.PlayerCountComparisonTest"/>
+        </classes>
+    </test>
+    <test name="SwagLabs">
+        <classes>
+            <class name="tests.SwagLabsSortTest"/>
+        </classes>
+    </test>
+    <test name="DemoQa">
+        <classes>
+            <class name="tests.DemoQaFormTest"/>
+        </classes>
+    </test>
+</suite>

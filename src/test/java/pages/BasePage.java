@@ -13,6 +13,7 @@ public abstract class BasePage {
     protected WebDriver driver;
     protected WebDriverWait wait;
 
+    //параллельные тесты сделать
     public BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(MAX_WAIT));

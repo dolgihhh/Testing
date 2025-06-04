@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.testng.Assert;
 import utils.NumbersUtils;
 
 import java.util.LinkedHashMap;
@@ -12,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 public class TopSellersPage extends BasePage {
+    private String gameTitle;
+    private Double gamePrice;
+
     @FindBy(xpath = "//button[contains(@class, 'DialogDropDown')]")
     private WebElement countryDropDown;
 
@@ -21,16 +25,21 @@ public class TopSellersPage extends BasePage {
 
     public TopSellersPage(WebDriver driver) {
         super(driver);
+        Assert.assertTrue(this.isLoaded(), "Top sellers page isn't loaded");
     }
 
-    public void clickCountryDropDown() {
+    public TopSellersPage clickCountryDropDown() {
         click(countryDropDown);
+
+        return this;
     }
 
-    public void changeCountry(String country) {
+    public TopSellersPage changeCountry(String country) {
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format("//div" +
                 "[contains(@class, 'DialogInputContainer')]//div[text()='%s']", country))));
         click(element);
+
+        return this;
     }
 
     public GamePage clickGame(int number) {
@@ -39,12 +48,16 @@ public class TopSellersPage extends BasePage {
             throw new IllegalArgumentException("Invalid game number: " + number);
         }
         wait.until(ExpectedConditions.visibilityOf(gamesElements.get(number - 1)));
+        var gameTitleAndPrice = getTitleAndPriceOfGame(number);
+        gameTitle = gameTitleAndPrice.getKey();
+        gamePrice = gameTitleAndPrice.getValue();
+
         click(gamesElements.get(number - 1));
 
         return new GamePage(driver);
     }
 
-    public Map<String, Double> getTitlesAndPrices() {
+    private Map<String, Double> getTitlesAndPrices() {
         Map<String, Double> titleAndPriceMap = new LinkedHashMap<>();
         wait.until(ExpectedConditions.visibilityOfAllElements(gamesElements));
         List<WebElement> topTenGames = gamesElements.subList(0, 10);
@@ -65,7 +78,7 @@ public class TopSellersPage extends BasePage {
         return titleAndPriceMap;
     }
 
-    public Map.Entry<String, Double> getTitleAndPriceOfGame(int gameNumber) {
+    private Map.Entry<String, Double> getTitleAndPriceOfGame(int gameNumber) {
         Map<String, Double> titlesAndPrices = getTitlesAndPrices();
 
         if (gameNumber < 1 || gameNumber >= titlesAndPrices.size()) {
@@ -78,6 +91,15 @@ public class TopSellersPage extends BasePage {
                 .findFirst()
                 .orElseThrow();
     }
+
+    public String getGameTitle() {
+        return gameTitle;
+    }
+
+    public Double getGamePrice() {
+        return gamePrice;
+    }
+
     @Override
     public boolean isLoaded() {
         return isElementDisplayed(countryDropDown);

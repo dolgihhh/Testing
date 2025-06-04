@@ -13,21 +13,14 @@ public class GetTopSellersTest extends BaseTest {
     @Test
     public void getTopSellers() {
         SteamMainPage steamMainPage = new SteamMainPage(driver);
-        Assert.assertTrue(steamMainPage.isLoaded(), "Steam main page isn't open");
-        steamMainPage.hoverNewAndNoteworthyLink();
-        TopSellersPage topSellersPage = steamMainPage.clickTopSellersLink();
-        Assert.assertTrue(topSellersPage.isLoaded(), "Top sellers page isn't open");
-        topSellersPage.clickCountryDropDown();
-        topSellersPage.changeCountry(COUNTRY);
-
-        String gameTitle = topSellersPage.getTitleAndPriceOfGame(NUMBER_OF_GAME).getKey();
-        Double gamePrice = topSellersPage.getTitleAndPriceOfGame(NUMBER_OF_GAME).getValue();
+        TopSellersPage topSellersPage = steamMainPage.hoverNewAndNoteworthyLink()
+                .clickTopSellersLink()
+                .clickCountryDropDown()
+                .changeCountry(COUNTRY);
 
         GamePage gamePage = topSellersPage.clickGame(NUMBER_OF_GAME);
-
-        Assert.assertTrue(gamePage.isLoaded(), "Game page isn't open");
-        Assert.assertEquals(gamePage.getGameName(), gameTitle, "Titles isn't equal");
-        Assert.assertEquals(gamePage.getGamePrice(), gamePrice, "Price isn't equal");
+        Assert.assertEquals(gamePage.getGameName(), topSellersPage.getGameTitle(), "Titles isn't equal");
+        Assert.assertEquals(gamePage.getGamePrice(), topSellersPage.getGamePrice(), "Price isn't equal");
         System.out.println(gamePage.getReleaseDate());
         System.out.println(gamePage.getDeveloperName());
         System.out.println(gamePage.getGameGenre());

@@ -69,3 +69,4 @@ allure-results/
 allure-report/
 
 downloads/
+*.properties

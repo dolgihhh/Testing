@@ -14,7 +14,7 @@ import java.util.*;
 
 public class DemoQaFormPage extends BasePage {
     private static final String URL = "https://demoqa.com/automation-practice-form";
-
+    //библиотека Faker, форма в Component, паттерн Builder для создания формы
     @FindBy(id = "firstName")
     private WebElement firstNameInput;
 
@@ -184,7 +184,6 @@ public class DemoQaFormPage extends BasePage {
     public void fillState(String state) {
         scrollTo(stateDiv);
         click(stateDiv);
-        click(stateDiv);
         List<String> statesStr = stateInputOptions.stream()
                 .map(WebElement::getText)
                 .toList();
@@ -198,7 +197,6 @@ public class DemoQaFormPage extends BasePage {
 
     public void fillCity(String city) {
         scrollTo(cityDiv);
-        click(cityDiv); //to close list
         click(cityDiv);
         wait.until(ExpectedConditions.visibilityOfAllElements(cityInputOptions));
         List<String> citiesStr = cityInputOptions.stream()
@@ -223,8 +221,10 @@ public class DemoQaFormPage extends BasePage {
 
         int statesAmount =  stateInputOptions.size();
         int randomStateIndex = NumbersUtils.getRandomNumber(0, statesAmount - 1);
+        String state = stateInputOptions.get(randomStateIndex).getText();
+        click(stateDiv); //to close drop-down list
 
-        return stateInputOptions.get(randomStateIndex).getText();
+        return state;
     }
 
     public String getRandomCity() {
@@ -235,7 +235,10 @@ public class DemoQaFormPage extends BasePage {
         int citiesAmount =  cityInputOptions.size();
         int randomCityIndex = NumbersUtils.getRandomNumber(0, citiesAmount - 1);
 
-        return cityInputOptions.get(randomCityIndex).getText();
+        String city = cityInputOptions.get(randomCityIndex).getText();
+        click(cityDiv); //to close drop-down list
+
+        return city;
     }
 
     public String getRandomGender() {
@@ -261,39 +264,39 @@ public class DemoQaFormPage extends BasePage {
     }
 
     public String getStudentName() {
-        return studentName.getText();
+        return getText(studentName);
     }
 
     public String getStudentEmail() {
-        return studentEmail.getText();
+        return getText(studentEmail);
     }
 
     public String getGender() {
-        return gender.getText();
+        return getText(gender);
     }
 
     public String getMobile() {
-        return mobile.getText();
+        return getText(mobile);
     }
 
     public String getDateOfBirth() {
-        return DateUtils.formatDate(dateOfBirth.getText());
+        return DateUtils.formatDate(getText(dateOfBirth));
     }
 
     public String getStateAndCity() {
-        return stateAndCity.getText();
+        return getText(stateAndCity);
     }
 
     public String getAddress() {
-        return address.getText();
+        return getText(address);
     }
 
     public String getPicturePath() {
-        return picture.getText();
+        return getText(picture);
     }
 
     public String getSubjects() {
-        return subjects.getText();
+        return getText(subjects);
     }
 
     public List<String> getHobbies() {

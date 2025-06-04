@@ -45,6 +45,7 @@ public class DemoQaFormTest extends BaseTest {
         CITY = demoQaFormPage.getRandomCity();
         demoQaFormPage.fillCity(CITY);
         demoQaFormPage.clickSubmitBtn();
+        //Thread.sleep(5000);
         Assert.assertEquals(demoQaFormPage.getStudentName(), FIRST_NAME + " " + LAST_NAME,
                 "Name isn't correct");
         Assert.assertEquals(demoQaFormPage.getStudentEmail(), EMAIL, "Email isn't correct");

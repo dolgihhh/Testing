@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.testng.Assert;
 
 
 public class SteamMainPage extends BasePage {
@@ -23,6 +24,7 @@ public class SteamMainPage extends BasePage {
     public SteamMainPage(WebDriver driver) {
         super(driver);
         driver.get(URL);
+        Assert.assertTrue(this.isLoaded(), "Main page isn't loaded");
     }
 
     public SteamAboutPage clickAboutLink() {
@@ -31,8 +33,10 @@ public class SteamMainPage extends BasePage {
         return new SteamAboutPage(driver);
     }
 
-    public void hoverNewAndNoteworthyLink() {
+    public SteamMainPage hoverNewAndNoteworthyLink() {
         hover(newAndNoteworthyLink, noteworthySubmenu);
+
+        return this;
     }
 
     public TopSellersPage clickTopSellersLink() {
