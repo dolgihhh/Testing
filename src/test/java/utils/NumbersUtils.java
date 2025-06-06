@@ -29,8 +29,6 @@ public class NumbersUtils {
     public Integer getRandomNumber(int from, int to) {
         Random random = new Random();
 
-        //System.out.println(from);
-        //System.out.println(to);
         return from + random.nextInt(to - from + 1);
     }
 

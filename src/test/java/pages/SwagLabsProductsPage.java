@@ -1,5 +1,6 @@
 package pages;
 
+import models.SortValue;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -33,19 +34,28 @@ public class SwagLabsProductsPage extends BasePage {
         return isElementDisplayed(sortSelect);
     }
 
-    public boolean isSortedBy(String sortValue) {
-        switch (sortValue) {
-            case "lohi" :
-                List<Double> itemPrices = itemsPrices.stream()
-                    .map(WebElement::getText)
-                    .map(s -> s.replaceAll("[^\\d.]", ""))
-                    .map(Double::valueOf)
-                    .toList();
-                List<Double> compareList = new ArrayList<>(itemPrices);
-                Collections.sort(compareList);
-                return compareList.equals(itemPrices);
-            default: return false;
-        }
+    public boolean isSortedByPrice(SortValue sortValue) {
+        List<Double> itemPrices = itemsPrices.stream()
+                .map(WebElement::getText)
+                .map(s -> s.replaceAll("[^\\d.]", ""))
+                .filter(s -> !s.isEmpty())
+                .map(Double::valueOf)
+                .toList();
 
+        List<Double> sortedPrices = new ArrayList<>(itemPrices);
+
+        switch (sortValue) {
+            case PRICE_LOW_TO_HIGH -> {
+                Collections.sort(sortedPrices);
+                return sortedPrices.equals(itemPrices);
+            }
+            case PRICE_HIGH_TO_LOW -> {
+                sortedPrices.sort(Collections.reverseOrder());
+                return sortedPrices.equals(itemPrices);
+            }
+            default -> {
+                throw new UnsupportedOperationException("Method is used only to check price sorting");
+            }
+        }
     }
 }

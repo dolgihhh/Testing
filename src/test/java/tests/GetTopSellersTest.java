@@ -1,10 +1,10 @@
 package tests;
 
+import models.SellersPageData;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.GamePage;
 import pages.SteamMainPage;
-import pages.TopSellersPage;
 
 public class GetTopSellersTest extends BaseTest {
     private static final String COUNTRY = "Global";
@@ -13,14 +13,24 @@ public class GetTopSellersTest extends BaseTest {
     @Test
     public void getTopSellers() {
         SteamMainPage steamMainPage = new SteamMainPage(driver);
-        TopSellersPage topSellersPage = steamMainPage.hoverNewAndNoteworthyLink()
+//        SellersPageData sellersPageData = steamMainPage
+//                .hoverNewAndNoteworthyLink()
+//                .clickTopSellersLink()
+//                .clickCountryDropDown()
+//                .changeCountry(COUNTRY)
+//                .clickGame(NUMBER_OF_GAME)
+//                .saveState();
+        SellersPageData sellersPageData = steamMainPage//изменить название
+                .hoverNewAndNoteworthyLink()
                 .clickTopSellersLink()
                 .clickCountryDropDown()
-                .changeCountry(COUNTRY);
+                .changeCountry(COUNTRY)
+                .clickGameAndSavePageData(NUMBER_OF_GAME);
 
-        GamePage gamePage = topSellersPage.clickGame(NUMBER_OF_GAME);
-        Assert.assertEquals(gamePage.getGameName(), topSellersPage.getGameTitle(), "Titles isn't equal");
-        Assert.assertEquals(gamePage.getGamePrice(), topSellersPage.getGamePrice(), "Price isn't equal");
+        GamePage gamePage = new GamePage(driver);
+
+        Assert.assertEquals(gamePage.getGameName(), sellersPageData.getTitle(), "Titles isn't equal");
+        Assert.assertEquals(gamePage.getGamePrice(), sellersPageData.getPrice(), "Prices isn't equal");
         System.out.println(gamePage.getReleaseDate());
         System.out.println(gamePage.getDeveloperName());
         System.out.println(gamePage.getGameGenre());

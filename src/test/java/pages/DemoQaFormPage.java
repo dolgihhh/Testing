@@ -1,5 +1,6 @@
 package pages;
 
+import models.DemoQaFormData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,6 +11,7 @@ import utils.DateUtils;
 import utils.NumbersUtils;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class DemoQaFormPage extends BasePage {
@@ -320,9 +322,28 @@ public class DemoQaFormPage extends BasePage {
         return hobbiesNames;
     }
 
+    public void fillForm(DemoQaFormData data) {
+        fillFirstName(data.getFirstName());
+        fillLastName(data.getLastName());
+        fillUserEmail(data.getEmail());
+        chooseGenderByValue(data.getGender());
+        fillUserPhoneNumber(data.getPhoneNumber());
+        fillUserBirthDate(data.getBirthDate());
+        fillSubjects(data.getSubjects());
+        fillHobbiesByValues(data.getHobbies());
+        uploadPicture(data.getFilePath());
+        fillAddress(data.getAddress());
+        fillState(data.getState());
+    }
+
+    public String getFileNameFromPath(String filePath) {
+        return Paths.get(filePath).getFileName().toString();
+    }
 
     @Override
     public boolean isLoaded() {
         return isElementDisplayed(firstNameInput);
     }
+
+
 }

@@ -1,5 +1,6 @@
 package tests;
 
+import models.SortValue;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.SwagLabsMainPage;
@@ -9,7 +10,7 @@ import utils.ConfigReader;
 public class SwagLabsSortTest extends BaseTest {
     private static final String USERNAME = ConfigReader.get("username");//хранить в .properties
     private static final String PASSWORD = ConfigReader.get("password");
-    private static final String SORT_VALUE = ConfigReader.get("sort_value");
+    private static final SortValue SORT_VALUE = SortValue.getSortValueFromConfig();//
 
     @Test
     public void sortTest() {
@@ -17,8 +18,8 @@ public class SwagLabsSortTest extends BaseTest {
         swagLabsMainPage.fillUsername(USERNAME);
         swagLabsMainPage.fillPassword(PASSWORD);
         SwagLabsProductsPage swagLabsProductsPage = swagLabsMainPage.clickLoginBtn();
-        swagLabsProductsPage.selectSortByValue(SORT_VALUE);
-        Assert.assertTrue(swagLabsProductsPage.isSortedBy(SORT_VALUE),
+        swagLabsProductsPage.selectSortByValue(SORT_VALUE.getValue());
+        Assert.assertTrue(swagLabsProductsPage.isSortedByPrice(SORT_VALUE), // итерироваться по ENUM
                 "Products aren't sorted in right way");
     }
 }
