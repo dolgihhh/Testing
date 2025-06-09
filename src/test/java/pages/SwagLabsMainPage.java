@@ -1,8 +1,8 @@
 package pages;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import utils.DriverManager;
 
 public class SwagLabsMainPage extends BasePage {
     private static final String URL = "https://www.saucedemo.com/";
@@ -10,29 +10,40 @@ public class SwagLabsMainPage extends BasePage {
     @FindBy(id = "user-name")
     private WebElement usernameInput;
 
+    @FindBy(css = "*[data-test='error']")
+    private WebElement errorMessage;
+
     @FindBy(id = "password")
     private WebElement passwordInput;
 
     @FindBy(id = "login-button")
     private WebElement loginBtn;
 
-    public SwagLabsMainPage(WebDriver driver) {
-        super(driver);
+    public SwagLabsMainPage() {
+        super(DriverManager.getDriver());
         driver.get(URL);
     }
 
-    public void fillUsername(String text){
-        sendKeys(usernameInput, text);
+    public boolean isLoginErrorDisplayed() {
+        return isElementDisplayed(errorMessage);
     }
 
-    public void fillPassword(String text) {
+    public SwagLabsMainPage fillUsername(String text){
+        sendKeys(usernameInput, text);
+
+        return this;
+    }
+
+    public SwagLabsMainPage fillPassword(String text) {
         sendKeys(passwordInput, text);
+
+        return this;
     }
 
     public SwagLabsProductsPage clickLoginBtn() {
         click(loginBtn);
 
-        return new SwagLabsProductsPage(driver);
+        return new SwagLabsProductsPage();
     }
 
 

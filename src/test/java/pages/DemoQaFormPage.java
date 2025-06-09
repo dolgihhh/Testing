@@ -2,12 +2,13 @@ package pages;
 
 import models.DemoQaFormData;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 import utils.DateUtils;
+import utils.DriverManager;
 import utils.NumbersUtils;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import java.util.*;
 
 public class DemoQaFormPage extends BasePage {
     private static final String URL = "https://demoqa.com/automation-practice-form";
-    //библиотека Faker, форма в Component, паттерн Builder для создания формы
+
     @FindBy(id = "firstName")
     private WebElement firstNameInput;
 
@@ -107,24 +108,25 @@ public class DemoQaFormPage extends BasePage {
     @FindBy(xpath = "//td[text()='Subjects']/following-sibling::td[1]")
     private WebElement subjects;
 
-    public DemoQaFormPage(WebDriver driver) {
-        super(driver);
+    public DemoQaFormPage() {
+        super(DriverManager.getDriver());
         driver.get(URL);
+        Assert.assertTrue(this.isLoaded(), "Demo QA form page isn't loaded");
     }
 
-    public void fillFirstName(String firstName) {
+    private void fillFirstName(String firstName) {
         sendKeys(firstNameInput, firstName);
     }
 
-    public void fillLastName(String lastName) {
+    private void fillLastName(String lastName) {
         sendKeys(lastNameInput, lastName);
     }
 
-    public void fillUserEmail(String userEmail) {
+    private void fillUserEmail(String userEmail) {
         sendKeys(userEmailInput, userEmail);
     }
 
-    public void chooseGenderByValue(String value) {
+    private void chooseGenderByValue(String value) {
         for (WebElement genderCheckbox: gendersCheckboxes) {
             if (Objects.equals(genderCheckbox.getAttribute("value"), value)) {
                 String id = genderCheckbox.getAttribute("id");
@@ -136,11 +138,11 @@ public class DemoQaFormPage extends BasePage {
         }
     }
 
-    public void fillUserPhoneNumber(String number) {
+    private void fillUserPhoneNumber(String number) {
         sendKeys(userNumberInput, number);
     }
 
-    public void fillUserBirthDate(String dateOfBirth) {
+    private void fillUserBirthDate(String dateOfBirth) {
         click(dateOfBirthInput);
         Select selectMonth = new Select(monthSelect);
         String month = DateUtils.getMonth(dateOfBirth);
@@ -154,7 +156,7 @@ public class DemoQaFormPage extends BasePage {
         dateEl.click();
     }
 
-    public void fillSubjects(String subject) {
+    private void fillSubjects(String subject) {
         sendKeys(subjectsInput, subject);
         WebElement subjectBtn = wait.until(ExpectedConditions.elementToBeClickable(
                 By.xpath(String.format("//div[contains(@class, 'subjects-auto-complete__option') and text()='%s']",
@@ -162,7 +164,7 @@ public class DemoQaFormPage extends BasePage {
         subjectBtn.click();
     }
 
-    public void fillHobbiesByValues(List<String> comboboxValues) {
+    private void fillHobbiesByValues(List<String> comboboxValues) {
         for (WebElement hobbyCombobox: hobbiesComboboxes) {
             if (comboboxValues.contains(hobbyCombobox.getAttribute("value"))) {
                 String id = hobbyCombobox.getAttribute("id");
@@ -174,16 +176,16 @@ public class DemoQaFormPage extends BasePage {
         }
     }
 
-    public void uploadPicture(String filePath) {
+    private void uploadPicture(String filePath) {
         File fileToUpload = new File(filePath);
         uploadPicture.sendKeys(fileToUpload.getAbsolutePath());
     }
 
-    public void fillAddress(String address) {
+    private void fillAddress(String address) {
         sendKeys(currentAddressInput, address);
     }
 
-    public void fillState(String state) {
+    private void fillState(String state) {
         scrollTo(stateDiv);
         click(stateDiv);
         List<String> statesStr = stateInputOptions.stream()
@@ -197,7 +199,7 @@ public class DemoQaFormPage extends BasePage {
         stateToChooseDiv.click();
     }
 
-    public void fillCity(String city) {
+    private void fillCity(String city) {
         scrollTo(cityDiv);
         click(cityDiv);
         wait.until(ExpectedConditions.visibilityOfAllElements(cityInputOptions));
@@ -213,8 +215,10 @@ public class DemoQaFormPage extends BasePage {
         cityToChooseDiv.click();
     }
 
-    public void clickSubmitBtn() {
+    public DemoQaFormPage clickSubmitBtn() {
         click(submitBtn);
+
+        return this;
     }
 
     public String getRandomState() {
@@ -243,13 +247,13 @@ public class DemoQaFormPage extends BasePage {
         return city;
     }
 
-    public String getRandomGender() {
-        wait.until(ExpectedConditions.visibilityOfAllElements(genderLabels));
-        int numberOfGenders = gendersCheckboxes.size();
-        int randomGenderIndex = NumbersUtils.getRandomNumber(0, numberOfGenders - 1);
-
-        return gendersCheckboxes.get(randomGenderIndex).getAttribute("value");
-    }
+//    public String getRandomGender() {
+//        wait.until(ExpectedConditions.visibilityOfAllElements(genderLabels));
+//        int numberOfGenders = gendersCheckboxes.size();
+//        int randomGenderIndex = NumbersUtils.getRandomNumber(0, numberOfGenders - 1);
+//
+//        return gendersCheckboxes.get(randomGenderIndex).getAttribute("value");
+//    }
 
     public List<String> getRandomHobbies() {
         wait.until(ExpectedConditions.visibilityOfAllElements(hobbiesLabels));
@@ -322,7 +326,7 @@ public class DemoQaFormPage extends BasePage {
         return hobbiesNames;
     }
 
-    public void fillForm(DemoQaFormData data) {
+    public DemoQaFormPage fillForm(DemoQaFormData data) {
         fillFirstName(data.getFirstName());
         fillLastName(data.getLastName());
         fillUserEmail(data.getEmail());
@@ -334,6 +338,10 @@ public class DemoQaFormPage extends BasePage {
         uploadPicture(data.getFilePath());
         fillAddress(data.getAddress());
         fillState(data.getState());
+        data.setCity(getRandomCity());
+        fillCity(data.getCity());
+
+        return this;
     }
 
     public String getFileNameFromPath(String filePath) {

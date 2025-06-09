@@ -1,6 +1,6 @@
 package pages;
 
-import models.SellersPageData;
+import models.GameInfoData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 public class TopSellersPage extends BasePage {
-    //private SellersPageData sellersPageData;
 
     @FindBy(xpath = "//button[contains(@class, 'DialogDropDown')]")
     private WebElement countryDropDown;
@@ -42,47 +41,22 @@ public class TopSellersPage extends BasePage {
         return this;
     }
 
-//    public SellersPageData saveState() {
-//
-//        return sellersPageData;
-//    }
-
-//    public GamePage clickGame(int number) {
-//        wait.until(ExpectedConditions.visibilityOfAllElements(gamesElements));
-//        if (number < 1 || number > gamesElements.size()) {
-//            throw new IllegalArgumentException("Invalid game number: " + number);
-//        }
-//        wait.until(ExpectedConditions.visibilityOf(gamesElements.get(number - 1)));
-//        var gameTitleAndPrice = getTitleAndPriceOfGame(number);
-//        //gameTitle = gameTitleAndPrice.getKey();
-//        //gamePrice = gameTitleAndPrice.getValue();
-//        sellersPageData = new SellersPageData();
-//        sellersPageData.setTitle(gameTitleAndPrice.getKey());
-//        sellersPageData.setPrice(gameTitleAndPrice.getValue());
-//
-//        click(gamesElements.get(number - 1));
-//
-//        return new GamePage(driver);
-//    }
-
-    public SellersPageData clickGameAndSavePageData(int number) {
+    public GameInfoData clickGameAndSaveGameInfoData(int number) {
         wait.until(ExpectedConditions.visibilityOfAllElements(gamesElements));
         if (number < 1 || number > gamesElements.size()) {
             throw new IllegalArgumentException("Invalid game number: " + number);
         }
         wait.until(ExpectedConditions.visibilityOf(gamesElements.get(number - 1)));
         var gameTitleAndPrice = getTitleAndPriceOfGame(number);
-        //SellersPageData sellersPageData = new SellersPageData();
-        //sellersPageData.setTitle(gameTitleAndPrice.getKey());
-        //sellersPageData.setPrice(gameTitleAndPrice.getValue());
-        SellersPageData sellersPageData = SellersPageData.builder()
+
+        GameInfoData gameInfoData = GameInfoData.builder()
                 .title(gameTitleAndPrice.getKey())
                 .price(gameTitleAndPrice.getValue())
                 .build();
 
         click(gamesElements.get(number - 1));
 
-        return sellersPageData;
+        return gameInfoData;
     }
 
     private Map<String, Double> getTitlesAndPrices() {
@@ -120,13 +94,6 @@ public class TopSellersPage extends BasePage {
                 .orElseThrow();
     }
 
-//    public String getGameTitle() {
-//        return gameTitle;
-//    }
-
-//    public Double getGamePrice() {
-//        return gamePrice;
-//    }
 
     @Override
     public boolean isLoaded() {

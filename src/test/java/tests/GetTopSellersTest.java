@@ -1,6 +1,6 @@
 package tests;
 
-import models.SellersPageData;
+import models.GameInfoData;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.GamePage;
@@ -12,27 +12,17 @@ public class GetTopSellersTest extends BaseTest {
 
     @Test
     public void getTopSellers() {
-        SteamMainPage steamMainPage = new SteamMainPage(driver);
-//        SellersPageData sellersPageData = steamMainPage
-//                .hoverNewAndNoteworthyLink()
-//                .clickTopSellersLink()
-//                .clickCountryDropDown()
-//                .changeCountry(COUNTRY)
-//                .clickGame(NUMBER_OF_GAME)
-//                .saveState();
-        SellersPageData sellersPageData = steamMainPage//изменить название
+        SteamMainPage steamMainPage = new SteamMainPage();
+        GameInfoData gameInfoData = steamMainPage//изменить название
                 .hoverNewAndNoteworthyLink()
                 .clickTopSellersLink()
                 .clickCountryDropDown()
                 .changeCountry(COUNTRY)
-                .clickGameAndSavePageData(NUMBER_OF_GAME);
+                .clickGameAndSaveGameInfoData(NUMBER_OF_GAME);//не принимать номер игры, рандомно из существующих
 
-        GamePage gamePage = new GamePage(driver);
+        GamePage gamePage = new GamePage();
 
-        Assert.assertEquals(gamePage.getGameName(), sellersPageData.getTitle(), "Titles isn't equal");
-        Assert.assertEquals(gamePage.getGamePrice(), sellersPageData.getPrice(), "Prices isn't equal");
-        System.out.println(gamePage.getReleaseDate());
-        System.out.println(gamePage.getDeveloperName());
-        System.out.println(gamePage.getGameGenre());
+        Assert.assertEquals(gamePage.getGameName(), gameInfoData.getTitle(), "Titles isn't equal");
+        Assert.assertEquals(gamePage.getGamePrice(), gameInfoData.getPrice(), "Prices isn't equal");
     }
 }

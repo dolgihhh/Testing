@@ -1,9 +1,9 @@
 package pages;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
+import utils.DriverManager;
 
 
 public class SteamMainPage extends BasePage {
@@ -21,8 +21,8 @@ public class SteamMainPage extends BasePage {
     @FindBy(xpath = "//a[@class='popup_menu_item' and contains(text(), 'Top Sellers')]")
     private WebElement topSellersLink;
 
-    public SteamMainPage(WebDriver driver) {
-        super(driver);
+    public SteamMainPage() {
+        super(DriverManager.getDriver());
         driver.get(URL);
         Assert.assertTrue(this.isLoaded(), "Main page isn't loaded");
     }

@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.testng.Assert;
 import utils.NumbersUtils;
 
 
@@ -15,6 +16,7 @@ public class SteamAboutPage extends BasePage {
 
     public SteamAboutPage(WebDriver driver) {
         super(driver);
+        Assert.assertTrue(this.isLoaded(), "Steam about page isn't loaded");
     }
 
     public Integer getPlayersInGame() {

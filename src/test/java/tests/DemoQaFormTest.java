@@ -13,7 +13,7 @@ public class DemoQaFormTest extends BaseTest {
     private static final String SUBJECTS = ConfigReader.get("subjects");
     @Test
     public void sendForm() {
-        DemoQaFormPage demoQaFormPage = new DemoQaFormPage(driver);
+        DemoQaFormPage demoQaFormPage = new DemoQaFormPage();
         Faker faker = new Faker();
         DemoQaFormData formData = DemoQaFormData.builder()
                 .firstName(faker.name().firstName())
@@ -28,10 +28,9 @@ public class DemoQaFormTest extends BaseTest {
                 .address(faker.address().fullAddress())
                 .state(demoQaFormPage.getRandomState())
                 .build();
-        demoQaFormPage.fillForm(formData);
-        formData.setCity(demoQaFormPage.getRandomCity());//посмотреть параметры faker
-        demoQaFormPage.fillCity(formData.getCity());
-        demoQaFormPage.clickSubmitBtn();
+
+        demoQaFormPage.fillForm(formData)
+                .clickSubmitBtn();
 
         Assert.assertEquals(demoQaFormPage.getStudentName(), formData.getFirstName() + " "
                         + formData.getLastName(), "Name isn't correct");

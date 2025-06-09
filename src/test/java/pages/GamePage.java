@@ -1,9 +1,9 @@
 package pages;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
+import utils.DriverManager;
 import utils.NumbersUtils;
 
 public class GamePage extends BasePage {
@@ -23,8 +23,8 @@ public class GamePage extends BasePage {
     private WebElement genre;
 
 
-    public GamePage(WebDriver driver) {
-        super(driver);
+    public GamePage() {
+        super(DriverManager.getDriver());
         Assert.assertTrue(this.isLoaded(), "Game page isn't loaded");
     }
 

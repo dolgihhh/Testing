@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class SellersPageData {
+public class GameInfoData {
     private String title;
     private Double price;
 }
